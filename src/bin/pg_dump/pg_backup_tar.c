@@ -35,6 +35,7 @@
 #include "pgtar.h"
 #include "common/file_utils.h"
 #include "fe_utils/string_utils.h"
+#include "compress_io.h"
 
 #include <sys/stat.h>
 #include <ctype.h>
@@ -556,7 +557,7 @@ _tarReadRaw(ArchiveHandle *AH, void *buf, size_t len, TAR_MEMBER *th, FILE *fh)
 				res = GZREAD(&((char *) buf)[used], 1, len, th->zFH);
 				if (res != len && !GZEOF(th->zFH))
 					exit_horribly(modulename,
-					"could not read from input file: %s\n", strerror(errno));
+					"could not read from input file: %s\n", get_gz_error(th->zFH));
 			}
 			else
 			{

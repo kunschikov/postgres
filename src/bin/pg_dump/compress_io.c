@@ -593,7 +593,7 @@ cfread(void *ptr, int size, cfp *fp)
 		ret = gzread(fp->compressedfp, ptr, size);
 		if (ret != size && !gzeof(fp->compressedfp))
 			exit_horribly(modulename,
-					"could not read from input file: %s\n", strerror(errno));
+					"could not read from input file: %s\n", get_gz_error(fp->compressedfp));
 	}
 	else
 #endif
@@ -629,7 +629,7 @@ cfgetc(cfp *fp)
 		{
 			if (!gzeof(fp->compressedfp))
 				exit_horribly(modulename,
-					"could not read from input file: %s\n", strerror(errno));
+					"could not read from input file: %s\n", get_gz_error(fp->compressedfp));
 			else
 				exit_horribly(modulename,
 							"could not read from input file: end of file\n");
@@ -710,4 +710,16 @@ hasSuffix(const char *filename, const char *suffix)
 				  suffixlen) == 0;
 }
 
+const char *
+get_gz_error(gzFile gzf)
+{
+	int			errnum;
+	const char *errmsg;
+
+	errmsg = gzerror(gzf, &errnum);
+	if (errnum == Z_ERRNO)
+		return strerror(errno);
+	else
+		return errmsg;
+}
 #endif

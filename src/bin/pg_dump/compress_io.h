@@ -52,6 +52,7 @@ extern void ReadDataFromArchive(ArchiveHandle *AH, int compression,
 extern void WriteDataToArchive(ArchiveHandle *AH, CompressorState *cs,
 				   const void *data, size_t dLen);
 extern void EndCompressor(ArchiveHandle *AH, CompressorState *cs);
+extern const char * get_gz_error(gzFile gzf);
 
 
 typedef struct cfp cfp;
